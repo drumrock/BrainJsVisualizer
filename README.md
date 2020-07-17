@@ -1,5 +1,5 @@
 # BrainJsVisualizer
-BrainJS Neural Network visulization
+BrainJS Neural Network visualization
 
 ```
 //Create BrainJS net
