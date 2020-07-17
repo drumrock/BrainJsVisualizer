@@ -1,0 +1,78 @@
+<!doctype html>
+<html>
+<head>
+<title>brain.js NN visualizer by drumrock</title>
+
+<script type='text/javascript' src="./brain-browser.1.4.10.min.js" charset="utf-8"></script><!-- error w/o charset -->
+<script type='text/javascript' src='./BrainJsVisualizer.js'></script>
+</head>
+<body>
+
+<div style='box-sizing: border-box; display: block; width: 600px; height: auto; padding: 0px; background: #ccc; border: none; margin: 15px auto; text-align: center; position: relative; '>
+	<h1>brain.js NN visualizer by drumrock</h1>
+
+	<div id='myCanvasWrapper' style='box-sizing: border-box; display: block; width: 410px; height: 410px; padding: 0px; background: #eee; border: solid 5px #999; margin: 0 auto;'>
+
+		
+		
+	</div>
+	<br /><br />
+	<div id='myDimensions' style='text-align: center;'></div> 
+	
+	<a href='javascript:document.location.reload();'>reload (generate new random NN)</a>
+	<br /><br />
+	
+</div>
+
+
+<div id='myLog' style='margin: 15px; color: #333; font-size: 12px; font-family: monospace;'></div>
+
+<script type='text/javascript'>
+
+
+//Generating random trainingData and hiddenLayers
+const trainingData = [];
+trainingData[0] = {input: {}, output: {}};
+
+let hiddenLayersDimensions = [];
+const maxHiddenLayers = 7;
+const maxHiddenLayerSize = 5;
+const maxInputLayerSize = 15;
+const maxOutputLayerSize = 5;
+let hiddenLayersCount = Math.round(Math.random() * 1000 % maxHiddenLayers);
+for(layerIndex = 0; layerIndex < hiddenLayersCount; layerIndex++){
+	hiddenLayersDimensions[layerIndex] = Math.ceil(Math.random() * 1000 % maxHiddenLayerSize);
+}
+
+let inputLayerSize = Math.ceil(Math.random() * 1000 % maxInputLayerSize);
+for(let i = 0; i < inputLayerSize; i++){
+	trainingData[0].input[String.fromCharCode(i + 65)] = Math.random();
+}
+let outputLayerSize = Math.ceil(Math.random() * 1000 % maxOutputLayerSize);
+for(let i = 0; i < outputLayerSize; i++){
+	trainingData[0].output[String.fromCharCode(i + 97)] = Math.random();
+}
+
+
+//Training net
+const net = new brain.NeuralNetwork({ hiddenLayers: hiddenLayersDimensions });
+const stats = net.train(trainingData, {
+	iterations: 100,
+	log: (error) => console.log(error), //can be any custom function here
+	logPeriod: 10 //log once in X training cycles
+});
+console.log(stats);
+
+
+
+//Visualizing
+const wrapper = document.getElementById('myCanvasWrapper');
+const visualizer = new BrainJsVisualizer(net, wrapper);
+visualizer.render();
+
+document.getElementById('myDimensions').innerHTML = 'inputLayer: [' + Object.getOwnPropertyNames(net.inputLookup).length + '], hiddenLayers: [' + hiddenLayersDimensions + '], outputLayer: [' + Object.getOwnPropertyNames(net.outputLookup).length + ']';
+
+</script>
+
+</body>
+</html>
