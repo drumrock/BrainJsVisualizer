@@ -60,13 +60,15 @@ function BrainJsVisualizer(net, htmlParentNode){
 	};
 	
 	
-	this._drawArrow = function(node1, node2){
+	this._drawArrow = function(node1, node2, weight){
 		let x1 = node1.x, y1 = node1.y, x2 = node2.x, y2 = node2.y;
 		
 		this._context.beginPath();
-		this._context.fillStyle = this._colors.forwardArrow;
 		this._context.lineWidth = 1;
-		this._context.strokeStyle = this._colors.forwardArrow;
+		
+		this._context.fillStyle = `rgba(0,0,0, ${weight})`;
+		this._context.strokeStyle = `rgba(0,0,0, ${weight})`;
+
 		this._context.moveTo(x1, y1);
 		this._context.lineTo(x2, y2);
 		
@@ -133,7 +135,7 @@ function BrainJsVisualizer(net, htmlParentNode){
 				let layerIndex2 = layerIndex * 1 + 1;
 				for(let nodeIndex2 = 0; nodeIndex2 < this._sizes[layerIndex2]; nodeIndex2++){
 					const node2 = this._getNode(layerIndex2, nodeIndex2);
-					this._drawArrow(node, node2);
+					this._drawArrow(node, node2, Math.abs(this._net.weights[layerIndex2][nodeIndex2][nodeIndex]) / 2);
 				}
 			}
 			
